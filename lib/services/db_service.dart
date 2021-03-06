@@ -55,8 +55,6 @@ class DbService {
     return list;
   }
 
-  
-
   updataData(var data) async {
     CollectionReference collectionRefrence =
         FirebaseFirestore.instance.collection('users');
@@ -64,11 +62,9 @@ class DbService {
     querySnapshot.docs[0].reference.update(data);
   }
 
-  deleteItem(var data) async {
-    CollectionReference collectionRefrence =
-        FirebaseFirestore.instance.collection('users');
-    QuerySnapshot querySnapshot = await collectionRefrence.get();
-    querySnapshot.docs[0].reference.delete();
+  deleteItem(var document) async {
+    CollectionReference users = FirebaseFirestore.instance.collection(user);
+    users.doc(document).delete();
   }
 
   addUser(Map<String, dynamic> order, String productName) {
@@ -98,8 +94,8 @@ class DbService {
     bool userExists = await DbService().checkUserExists();
     if (userExists) {
       addItem(product);
+    } else {
+      addUser(product, name);
     }
-    else {
-    addUser(product, name);}
   }
 }

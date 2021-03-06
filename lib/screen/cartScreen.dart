@@ -2,16 +2,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:funcart/screen/testScreen.dart';
 import 'package:funcart/services/authentication_service.dart';
+import 'package:funcart/services/db_service.dart';
 import 'package:funcart/services/payment.dart';
 import '../widgets/recRoundButton.dart';
 
 // ignore: must_be_immutable
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   // In the constructor, require a Todo.
   CartScreen({Key key}) : super(key: key);
+
+  @override
+  _CartScreenState createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
   double sum = 34.0;
+
   double itemPrice;
-  List<QuerySnapshot> cartPrice = [];
+
   final List<Color> signInGradients = [
     Color(0xFFFF9844),
     Color(0xFFFE8853),
@@ -67,50 +75,44 @@ class CartScreen extends StatelessWidget {
                 child: Text('Server Error!'),
               );
             }
-            if (snapshot.hasData) {
-              snapshot.data.docs.map(
-                (DocumentSnapshot document) {
-                  document.data().forEach(
-                    (key, value) {
-                      itemPrice = double.parse(document.data()['price']);
-                      sum = sum + itemPrice;
-                      print(sum.toString());
-                    },
-                  );
-                },
-              );
-            }
 
             return ListView(
               children: snapshot.data.docs.map((DocumentSnapshot document) {
                 //totalSum = totalSum + document.data()['price'];
-                return Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                // studlist.add(double.parse(document.data()['price']));
+
+                return Container(decoration: BoxDecoration(border: Border.all(color: Colors.black26) ),
+                  child: ListTile(
+                    leading: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(document.data()['name']),
-                            Text(document.data()['brand'])
-                          ],
+                        Text(
+                          document.data()['name'],
+                          style: TextStyle(
+                              fontStyle: FontStyle.italic, fontSize: 22),
                         ),
-                        Text(document.data()['price']),
-                        Icon(Icons.close),
+                        Text(
+                          document.data()['brand'],
+                        )
+                      ],
+                    ),
+                    trailing: Wrap(
+                      spacing: 12, // space between two icons
+                      children: <Widget>[
+                        Text(
+                          '\$' + document.data()['price'],style: TextStyle(fontSize: 20 ),
+                        ),
+                        InkWell(
+                          child: Icon(Icons.close),
+                          onTap: () {
+                            DbService().deleteItem(document.data()['name']);
+                          },
+                        ),
                       ],
                     ),
                   ),
                 );
-                /*ListTile(
-                  leading: Text(document.data()['name']),
-                  subtitle: Text(document.data()['brand']),
-                  trailing: Text(document.data()['price']),
-                
-                );*/
               }).toList(),
             );
           },
