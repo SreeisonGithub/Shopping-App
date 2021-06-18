@@ -27,26 +27,6 @@ class _TestState extends State<Test> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CurvedNavigationBar(
-        key: _bottomNavigationKey,
-        height: 50,
-        items: <Widget>[
-          Icon(Icons.home, size: 30,),
-          Icon(Icons.shopping_bag, size: 30),
-          Icon(Icons.supervised_user_circle, size: 30),
-        ],
-        color: Colors.white,
-          buttonBackgroundColor: Colors.white,
-          backgroundColor: Colors.grey,
-          animationCurve: Curves.easeInOut,
-          animationDuration: Duration(milliseconds: 600),
-        onTap: (index) {
-          setState(() {
-            _currentPage = index;
-          });
-        },
-      ),
-      body: _pages[_currentPage]
-    );
+      );
   }
 }

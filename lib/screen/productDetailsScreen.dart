@@ -21,12 +21,14 @@ class ProductDetailsScreen extends StatelessWidget {
           children: [
             appBar(context),
             Container(
-              child: Image.network(product.imageLink),
+              child: Image.network(product.imageLink,errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+        return Image.asset("assets/images/error.png");
+    },),
               height: 186.0,
               width: 186.0,
             ),
             SizedBox(height: 25.0),
-            Expanded(child: section(product.description)),
+            Expanded(child: section(product.description),),
             purchase(context, cartItem, product)
           ],
         ),

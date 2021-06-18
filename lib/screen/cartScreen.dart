@@ -4,6 +4,7 @@ import 'package:funcart/screen/testScreen.dart';
 import 'package:funcart/services/authentication_service.dart';
 import 'package:funcart/services/db_service.dart';
 import 'package:funcart/services/payment.dart';
+import 'package:funcart/widgets/drawer.dart';
 import '../widgets/recRoundButton.dart';
 
 // ignore: must_be_immutable
@@ -28,11 +29,17 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold( appBar: AppBar(
+          
+          title: Text("My Orders"),
+        ),
+        drawer: drawer(),
+        resizeToAvoidBottomInset: false,
+       
       body: SafeArea(
         child: Column(
           children: [
-            appBar(context),
+            //appBar(context),
             itemLoading(),
             purchase(),
           ],
@@ -81,7 +88,9 @@ class _CartScreenState extends State<CartScreen> {
                 //totalSum = totalSum + document.data()['price'];
                 // studlist.add(double.parse(document.data()['price']));
 
-                return Container(decoration: BoxDecoration(border: Border.all(color: Colors.black26) ),
+                return Container(
+                  decoration:
+                      BoxDecoration(border: Border.all(color: Colors.black26)),
                   child: ListTile(
                     leading: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -101,7 +110,8 @@ class _CartScreenState extends State<CartScreen> {
                       spacing: 12, // space between two icons
                       children: <Widget>[
                         Text(
-                          '\$' + document.data()['price'],style: TextStyle(fontSize: 20 ),
+                          '\$' + document.data()['price'],
+                          style: TextStyle(fontSize: 20),
                         ),
                         InkWell(
                           child: Icon(Icons.close),
@@ -131,12 +141,13 @@ class _CartScreenState extends State<CartScreen> {
           InkWell(
             child: Icon(Icons.arrow_back_ios),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Test(),
-                ),
-              );
+              Navigator.pop(context);
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => Test(),
+              //   ),
+              // );
             },
           ),
           Container(

@@ -10,7 +10,7 @@ Widget roundedRectButton(
         children: <Widget>[
           Container(
             alignment: Alignment.center,
-            width: MediaQuery.of(mContext).size.width / 1.7,
+            width: MediaQuery.of(mContext).size.width / 1.9,
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),

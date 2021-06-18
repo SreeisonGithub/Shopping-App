@@ -1,114 +1,128 @@
 import 'package:flutter/material.dart';
 import 'package:funcart/models/productModel.dart';
 import 'package:funcart/screen/productDetailsScreen.dart';
+import 'package:funcart/services/authentication_service.dart';
 import '../blocs/productProvider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 Widget productTile(ProductBloc bloc, BuildContext context) {
- 
+  var user = AuthenticationService().getCurrentFirebaseUser();
   return StreamBuilder(
-      stream: bloc.products,
-      builder: (context, AsyncSnapshot<List<Products>> snapshot) {
-        if (snapshot.hasError) {
-          return Text('Something went wrong');
-        }
+    stream: bloc.products,
+    builder: (context, AsyncSnapshot<List<Products>> snapshot) {
+      if (snapshot.hasError) {
+        return Text('Something went wrong');
+      }
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      }
 
-        if (!snapshot.hasData) {
-          return Center(
-            child: Text('Application Error'),
-          );
-        }
+      if (!snapshot.hasData) {
+        return Center(
+          child: Text('Application Error'),
+        );
+      }
 
-        return StaggeredGridView.countBuilder(
-            crossAxisCount: 2,
-            staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 12,
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ProductDetailsScreen(snapshot.data[index]),
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: StaggeredGridView.countBuilder(
+          primary: false,
+          shrinkWrap: true,
+          crossAxisCount: 2,
+          staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 12,
+          itemCount: snapshot.data.length,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ProductDetailsScreen(snapshot.data[index]),
+                  ),
+                );
+              },
+              child: Container(
+                //height: 200,width:200,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  //Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(6),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Theme.of(context).hintColor.withOpacity(0.10),
+                        offset: Offset(0, 4),
+                        blurRadius: 10)
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Hero(
+                      tag: snapshot.data[index].id,
+                      child: Image.network(
+                        snapshot.data[index].imageLink,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace stackTrace) {
+                          return Image.asset("assets/images/error.png");
+                        },
+                      ),
                     ),
-                  );
-                },
-                child: Card(
-                  elevation: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 5),
+                      child: Text(
+                        snapshot.data[index].name,
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                        //product.name,
+                        //style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Row(
                       children: [
-                        Stack(
-                          children: [
-                            Container(
-                              height: 180,
-                              width: double.infinity,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Image.network(
-                                snapshot.data[index].imageLink,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          snapshot.data[index].name,
-                          maxLines: 2,
-                          style: TextStyle(
-                              fontFamily: 'avenir',
-                              fontWeight: FontWeight.w800),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 8),
-                        if (snapshot.data[index].rating != null)
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.green,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                              vertical: 2,
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  snapshot.data[index].rating.toString(),
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                Icon(
-                                  Icons.star,
-                                  size: 16,
-                                  color: Colors.black,
-                                ),
-                              ],
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Text(
+                            "Rs " + snapshot.data[index].price,
+                            //product.getPrice(),
+                            style: TextStyle(color: Colors.white),
+                            //style: Theme.of(context).textTheme.headline6,
                           ),
-                        SizedBox(height: 8),
-                        Text('\$${snapshot.data[index].price}',
-                            style:
-                                TextStyle(fontSize: 32, fontFamily: 'avenir')),
+                        ),
+                        user == null
+                            ? Container()
+                            : 
+                            InkWell(
+                                child: Icon(
+                                  Icons.bookmark_outline,
+                                  color: Colors.white,
+                                ),
+                                onTap: () {
+                                  bookmarkTapped(snapshot.data[index],user.email);
+                                },
+                              ),
                       ],
                     ),
-                  ),
+                    SizedBox(height: 15),
+                  ],
                 ),
-              );
-            });
-      });
+              ),
+            );
+          },
+        ),
+      );
+    },
+  );
+}
+
+bookmarkTapped(Products item, String email) {
+  var add = AuthenticationService().addBookmark(item, email);
 }

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:funcart/screen/testScreen.dart';
 import 'package:funcart/services/authentication_service.dart';
+import 'package:funcart/widgets/drawer.dart';
 import 'package:user_profile_avatar/user_profile_avatar.dart';
 import '../widgets/recRoundButton.dart';
 import 'loginScreen.dart';
@@ -18,7 +19,13 @@ class UserAccount extends StatelessWidget {
     final User user = AuthenticationService().getCurrentFirebaseUser();
 
     if (user == null) {
-      return Scaffold(
+      return Scaffold( appBar: AppBar(
+          
+          title: Text("PROFILE"),
+        ),
+        drawer: drawer(),
+        resizeToAvoidBottomInset: false,
+       
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,7 +53,13 @@ class UserAccount extends StatelessWidget {
         ),
       );
     } else {
-      return Scaffold(
+      return Scaffold( appBar: AppBar(
+          
+          title: Text("PROFILE"),
+        ),
+        drawer: drawer(),
+        resizeToAvoidBottomInset: false,
+       
         body: SafeArea(
           child: Column(
             children: [

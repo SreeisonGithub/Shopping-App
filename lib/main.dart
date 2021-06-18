@@ -1,9 +1,12 @@
 //import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:funcart/screen/homeScreen.dart';
+import 'package:funcart/screen/loginScreen.dart';
 //import 'package:funcart/blocs/productProvider.dart';
 //import 'package:funcart/screen/cartScreen.dart';
 import 'package:funcart/screen/testScreen.dart';
+import 'package:funcart/widgets/drawer.dart';
 //import 'package:funcart/screen/userAccount.dart';
 //import 'screen/homeScreen.dart';
 
@@ -30,8 +33,14 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Scaffold(
-        body:Test(),
+      home: Scaffold( appBar: AppBar(
+          
+          title: Text("Funcart"),
+        ),
+        drawer: drawer(),
+        resizeToAvoidBottomInset: false,
+       
+        body:MyHomePage(),
          //ProductProvider(  child: MyHomePage(title: 'FunCart'),),
       ),
     );
