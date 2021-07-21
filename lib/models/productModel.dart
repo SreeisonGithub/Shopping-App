@@ -31,7 +31,7 @@ class Products {
         this.productColors,
     });
 
-    int id;
+    int? id;
     String brand;
     String name;
     String price;
